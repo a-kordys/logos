@@ -52,7 +52,7 @@ pub fn logos(input: TokenStream) -> TokenStream {
 
     for attr in &item.attrs {
         if let Some(ext) = value_from_attr("extras", attr) {
-            extras.insert(util::ident(&ext), |_| panic!("Only one #[extras] attribute can be declared."));
+            extras.insert_new(util::ident(&ext), |_| panic!("Only one #[extras] attribute can be declared."));
         }
     }
 
@@ -86,11 +86,11 @@ pub fn logos(input: TokenStream) -> TokenStream {
             let variant = &variant.ident;
 
             if ident == "error" {
-                error.insert(variant, |_| panic!("Only one #[error] variant can be declared."));
+                error.insert_new(variant, |_| panic!("Only one #[error] variant can be declared."));
             }
 
             if ident == "end" {
-                end.insert(variant, |_| panic!("Only one #[end] variant can be declared."));
+                end.insert_new(variant, |_| panic!("Only one #[end] variant can be declared."));
             }
 
             if let Some(path) = value_from_attr("token", attr) {
