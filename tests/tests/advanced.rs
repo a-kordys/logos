@@ -1,5 +1,4 @@
 extern crate logos;
-#[macro_use]
 extern crate logos_derive;
 
 use logos::{Logos, lookup};

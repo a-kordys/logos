@@ -104,7 +104,7 @@ impl<'a> Node<'a> {
                     RepetitionKind::ZeroOrOne  => RepetitionFlag::ZeroOrOne,
                     RepetitionKind::ZeroOrMore => RepetitionFlag::ZeroOrMore,
                     RepetitionKind::OneOrMore  => RepetitionFlag::OneOrMore,
-                    RepetitionKind::Range(_) => panic!("The '{n,m}' repetition in #[regex] is currently unsupported."),
+                    RepetitionKind::Range(_) => panic!("{}", "The '{n,m}' repetition in #[regex] is currently unsupported."),
                 };
 
                 let mut node = Node::from_hir(repetition.hir.into_kind())?;
@@ -165,7 +165,7 @@ impl Regex {
     pub fn sequence(source: &str) -> Self {
         Regex {
             patterns: source.bytes().map(|byte| {
-                assert!(byte != 0, NO_ZERO_BYTE);
+                assert!(byte != 0, "{}", NO_ZERO_BYTE);
 
                 Pattern::Byte(byte)
             }).collect(),
@@ -181,7 +181,7 @@ impl Regex {
 
                 match literal {
                     Literal::Unicode(unicode) => {
-                        assert!(*unicode != 0 as char, NO_ZERO_BYTE);
+                        assert!(*unicode != 0 as char, "{}", NO_ZERO_BYTE);
 
                         let mut buf = [0u8; 4];
 
@@ -209,19 +209,19 @@ impl Regex {
                             .map(|range| {
                                 let (mut start, mut end) = (range.start(), range.end());
 
-                                assert!(end != 0 as char, NO_ZERO_BYTE);
+                                assert!(end != 0 as char, "{}", NO_ZERO_BYTE);
 
                                 static NON_ASCII: &str = "Non-ASCII ranges in #[regex] classes are currently unsupported.";
 
                                 match end as u32 {
                                     0        => panic!("{}", NO_ZERO_BYTE),
                                     0x10FFFF => end = 0xFF as char,
-                                    _        => assert!(end.is_ascii(), NON_ASCII),
+                                    _        => assert!(end.is_ascii(), "{}", NON_ASCII),
                                 }
 
                                 match start as u32 {
                                     0 => start = 1 as char,
-                                    _ => assert!(start.is_ascii(), NON_ASCII),
+                                    _ => assert!(start.is_ascii(), "{}", NON_ASCII),
                                 }
 
                                 if start == end {

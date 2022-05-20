@@ -445,7 +445,7 @@ impl<'a> Node<'a> {
             }
         };
 
-        mem::replace(self, Node::Fork(fork));
+        let _ = mem::replace(self, Node::Fork(fork));
 
         if let Node::Fork(fork) = self {
             fork
@@ -476,7 +476,7 @@ impl<'a> Node<'a> {
             Node::Token(_) => return,
         };
 
-        mem::replace(self, Node::Fork(fork));
+        let _ = mem::replace(self, Node::Fork(fork));
     }
 
     pub fn insert(&mut self, then: Node<'a>) {
@@ -490,7 +490,7 @@ impl<'a> Node<'a> {
         };
 
         if let Some(then) = then {
-            mem::replace(self, *then);
+            let _ = mem::replace(self, *then);
         }
     }
 
